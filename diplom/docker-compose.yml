@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:14.3
+    container_name: "db"
+    environment:
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASS: gamerzlife
+      POSTGRES_PASSWORD: gamerzlife
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
+  backend:
+    container_name: "backend"
+    restart: always
+    build:
+      context: ""
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    command: /bin/sh -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+
+volumes:
+  postgres_data:

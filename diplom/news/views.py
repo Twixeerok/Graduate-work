@@ -1,17 +1,31 @@
 from django.db.models import Count
-from django.views.generic import TemplateView, FormView, UpdateView
+from django.views.generic import TemplateView, FormView, UpdateView, ListView
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import HttpResponseRedirect
 from news.forms import NewsForm, CommentForm
-from apinews.models import ApiNews, Comment
+from apinews.models import ApiNews, Comment, Category
 from users.models import User
 from users.forms import AccountForm
 
+
+class MainView(TemplateView):
+    template_name = 'main.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['Category'] = Category.objects.all()
+        return context
+
 class MainPageView(TemplateView):
     template_name = 'index.html'
-    extra_context = {'page': ApiNews.objects.all()}
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['new'] = Category.objects.get(slug=self.kwargs['slug'])
+        context['page'] = ApiNews.objects.all().filter(category=Category.objects.get(slug=self.kwargs['slug']))
+        return context
 
 class Profile(LoginRequiredMixin, TemplateView):
     template_name = 'profile/profile.html'
@@ -44,6 +58,7 @@ class PostNews(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['news'] = ApiNews.objects.all()
+        context['cho'] = Category.objects.all()
         return context
         
     def form_valid(self, form):
@@ -51,13 +66,14 @@ class PostNews(LoginRequiredMixin, FormView):
             form = form.save(commit=False)
             form.user = self.request.user
             form.save()   
-            return HttpResponseRedirect(self.get_success_url())
+            return HttpResponseRedirect('ok')
         return redirect('add')
 
 
 class News(FormView):
     template_name = 'newspage.html'
     form_class = CommentForm
+    
 
 
     def get_context_data(self, **kwargs):
@@ -77,7 +93,7 @@ class News(FormView):
 
     def get_success_url(self):
         companyid=self.kwargs['id']
-        return reverse_lazy('news', kwargs={'id': companyid})
+        return reverse_lazy('category:news', kwargs={'id': companyid})
 
 
 

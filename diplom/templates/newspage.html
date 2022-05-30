@@ -31,43 +31,50 @@
 
 		
     </div>
-
-	<div class="comments">
-		<h3 class="title-comments">Комментарии {{ comment.count }}</h3>
-		<ul class="media-list">
-		  <!-- Комментарий (уровень 1) -->
-		  {% for i in comment %}
-		  <li class="media">
-			<div class="media-left">
-			  <a href="#">
-				<a class="nav-link" href="{% url 'profile' %}"><img class="rounded-circle mr-2" src="{{user.avatar.url}}" width="50">
-			  </a>
+	<br>
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+	<div class="container">
+	<div class="be-comment-block">
+		<h1 class="comments-title">Comments ({{comment.count}})</h1>
+		{% for i in comment %}
+		<div class="be-comment">
+			<div class="be-img-comment">	
+				<a href="blog-detail-2.html">
+					{% if i.avatar %}
+					<img src="{{i.avatar}}" alt="" class="be-ava-comment">
+					{% else %}
+					<img src="../media/default.png" alt="" class="be-ava-comment">
+					{% endif %}
+				</a>
 			</div>
-			<div class="media-body">
-			  <div class="media-heading">
-				<div class="author">{{i.user}}</div>
-				  <div class="metadata">
-					<span class="date">{{i.time}}</span>
-				  </div>
+			<div class="be-comment-content">
+					<span class="be-comment-name">
+						<a href="blog-detail-2.html">{{i.username}}</a>
+						</span>
+					<span class="be-comment-time">
+						<i class="fa fa-clock-o"></i>
+						{{i.time}}
+					</span>
+	
+				<p class="be-comment-text">
+					{{i.text}}
+				</p>
+			</div>
+		{% endfor %}
+		</div>
+		<form class="form-block" method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			<div class="rows">
+				<div class="col-xs-12">									
+					<div class="form-group" name="text">
+						{{form.text}}
+					</div>
 				</div>
-				<div class="media-text text-justify"> {{i.text}}</div>
-				<div class="footer-comment">
-				  <span class="vote plus" title="Нравится">
-					<i class="fa fa-thumbs-up"></i>
-				  </span>
-				  <span class="rating">+1</span>
-				  <span class="vote minus" title="Не нравится">
-					<i class="fa fa-thumbs-down"></i>
-				  </span>
-				  <span class="devide">|</span>
-				  <span class="comment-reply">
-					<a href="#" class="reply">ответить</a>
-				  </span>
-				</div>
-				{% endfor %}
-				
-
-    </section>
+				<input type="submit" value="Подтверидть" class="btn btn-primary pull-right">
+			
+			</div>
+		</form>
+	</div>
         
     </main>
 

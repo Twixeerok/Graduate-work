@@ -12,33 +12,23 @@
 		</div>
   	</div>
 <div class="da"></div>
-{% for i in page %}
 	<div class="album py-5 bg-light">
 		<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-md-6">
 			<div class="card mb-2 box-shadow">
-				<div class="card card-pin">
-					<img class="card-img" src="{{i.image.url}} " alt="Card image" >
-					<div class="overlay">
-						<h2 class="card-title title">{{i.title}}</h2>
-						<div class="more">
-							<a href="{% url 'category:news' i.id %}">
-							<i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> Подробности </a>
-						</div>
-					</div>
-				</div>
 				<div class="card-body">
-				<a href="{% url 'category:news' i.id %} " style="color: Black;"><p class="card-text">{{i.title}}</p></a>
+                    {% for i in Category %}
+				<a href="{{ i.get_absolute_url }}" style="color: Black;"><p class="card-text">{{i.title}}</p></a>
 				<p>{{i.description}}</p>
-				<div class="d-flex justify-content-between align-items-center">
-					<small class="text-muted">{{i.time}}</small>
+                    {% endfor %} 
 				</div>
+               
 				</div>
+               
 			</div>
 			</div>
-		
-{% endfor %} 
+
     <script src="{% static '/js/app.js' %}"></script>
     <script src="{% static '/js/theme.js' %}"></script>
 	<script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

@@ -5,12 +5,12 @@ from django.forms.widgets import TextInput, FileInput, Textarea
 class NewsForm(ModelForm):
     class Meta:
         model = ApiNews
-        fields = ['title','description', 'text', 'image']
+        fields = ['title','description', 'text', 'category', 'image']
 
         widgets = {
             'title': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Название статьи'
+                'placeholder': 'Введите'
             }),
             'description': TextInput(attrs={
                 'class': 'form-control',
@@ -33,6 +33,6 @@ class CommentForm(ModelForm):
         widgets = {
             'text': Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Название статьи'
+                'placeholder': 'Введите комментарий'
             }),
         }

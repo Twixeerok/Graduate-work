@@ -40,8 +40,8 @@
 		<div class="be-comment">
 			<div class="be-img-comment">	
 				<a href="blog-detail-2.html">
-					{% if i.avatar %}
-					<img src="{{i.avatar}}" alt="" class="be-ava-comment">
+					{% if user.avatar %}
+					<img src="{{user.avatar.url}}" alt="" class="be-ava-comment">
 					{% else %}
 					<img src="../media/default.png" alt="" class="be-ava-comment">
 					{% endif %}

@@ -11,8 +11,8 @@ urlpatterns = [
     path('news/<slug:slug>/', MainPageView.as_view(), name='main'),
     path('add/', check_recaptcha(PostNews.as_view()), name='add'),
     path('<int:id>/', News.as_view(), name='news'),
-    path('profile/edit/', check_recaptcha(ProfileEdit.as_view()), name='profiledit'),
-    path('profile/', Profile.as_view(), name='profile'),
+    path('accounts/profile/edit/', check_recaptcha(ProfileEdit.as_view()), name='profiledit'),
+    path('accounts/profile/', Profile.as_view(), name='profile'),
 ]
 
 

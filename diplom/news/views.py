@@ -35,7 +35,7 @@ class ProfileEdit(LoginRequiredMixin, UpdateView):
     template_name = 'profile/profile_edit.html'
     form_class = AccountForm
     model = User
-    success_url = reverse_lazy('profiledit')
+    success_url = reverse_lazy('category:profiledit')
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -67,7 +67,7 @@ class PostNews(LoginRequiredMixin, FormView):
             form.user = self.request.user
             form.save()   
             return HttpResponseRedirect('ok')
-        return redirect('add')
+        return redirect('category:add')
 
 
 class News(FormView):

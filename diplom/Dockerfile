@@ -1,7 +1,7 @@
 FROM python:3.7-alpine
 
 
-WORKDIR . ..
+WORKDIR /opt
 
 RUN apk update && apk add \
     gcc \

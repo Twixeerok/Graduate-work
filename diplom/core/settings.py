@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-m(19s36-^uhcox%%fho#glna_@+9rw^)bb9as9-t@*sbe_#$0&
 GOOGLE_RECAPTCHA_SECRET_KEY = '6LdEsRcgAAAAABVF16ANn_knIVudkSsccpmhlo5z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -70,7 +70,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
             'libraries':{
-            'custom_templatetag': 'news.templatetags.likes_blog',
+            'custom_templatetag': 'news.templatetags.likes',
 
             }
         },
@@ -89,7 +89,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'gamerzlife',
-        'HOST': 'bd',
+        'HOST': 'db',
         'PORT': 5432,
     }
 }

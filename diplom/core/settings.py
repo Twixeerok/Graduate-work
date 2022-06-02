@@ -70,8 +70,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
             'libraries':{
-            'custom_templatetag': 'news.templatetags.likes',
-
+            'custom_templatetag': 'news.templatetags.likes_blog',
             }
         },
     },

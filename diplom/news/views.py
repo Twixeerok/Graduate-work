@@ -1,25 +1,49 @@
-from django.db.models import Count
+from django.views import View
 from django.views.generic import TemplateView, FormView, UpdateView, ListView
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import HttpResponseRedirect
 from news.forms import NewsForm, CommentForm
-from apinews.models import ApiNews, Comment, Category
+from apinews.models import ApiNews, Comment, Category, Like
 from users.models import User
 from users.forms import AccountForm
 
+  
+class SearchMixin:
+    template_name = 'search.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search = self.request.GET.get('search','')
+        if search:
+            context['search'] = ApiNews.objects.filter(title__icontains=search)
+        else:
+            context['search'] = ApiNews.objects.all()
+        return context
 
-class MainView(TemplateView):
+
+
+class Search(SearchMixin, TemplateView):
+    template_name = 'search.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+class MainView(SearchMixin, TemplateView):
     template_name = 'main.html'
+    title = 'lox'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['Category'] = Category.objects.all()
         return context
+    
 
-class MainPageView(TemplateView):
+class MainPageView(SearchMixin, ListView):
     template_name = 'index.html'
+    paginate_by = 3
+    model = ApiNews
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -27,11 +51,18 @@ class MainPageView(TemplateView):
         context['page'] = ApiNews.objects.all().filter(category=Category.objects.get(slug=self.kwargs['slug']))
         return context
 
-class Profile(LoginRequiredMixin, TemplateView):
+class Profile(SearchMixin, LoginRequiredMixin, TemplateView):
     template_name = 'profile/profile.html'
 
+class UserProfile(SearchMixin, LoginRequiredMixin, TemplateView):
+    template_name = 'profile/profile_user.html'
 
-class ProfileEdit(LoginRequiredMixin, UpdateView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['prof'] = User.objects.get(pk=self.kwargs['id'])
+        return context
+
+class ProfileEdit(SearchMixin, LoginRequiredMixin, UpdateView):
     template_name = 'profile/profile_edit.html'
     form_class = AccountForm
     model = User
@@ -50,7 +81,7 @@ class ProfileEdit(LoginRequiredMixin, UpdateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class PostNews(LoginRequiredMixin, FormView):
+class PostNews(SearchMixin, LoginRequiredMixin, FormView):
     template_name = 'post.html'
     form_class = NewsForm
     success_url = reverse_lazy('mainpage')
@@ -70,17 +101,16 @@ class PostNews(LoginRequiredMixin, FormView):
         return redirect('category:add')
 
 
-class News(FormView):
+class News(SearchMixin, FormView):
     template_name = 'newspage.html'
     form_class = CommentForm
     
-
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['new'] = ApiNews.objects.get(pk=self.kwargs['id'])
         context['news'] = ApiNews.objects.all()
         context['comment'] = Comment.objects.all().filter(post = self.kwargs['id'])
+        context['like'] = Like.objects.all().filter(post = self.kwargs['id'])
         return context
 
     def form_valid(self, form):
@@ -97,3 +127,28 @@ class News(FormView):
 
 
 
+class Likes(View):
+    def post(self, *args, **kwargs):
+        blog_post_id = int(self.request.POST.get('blog_post_id'))
+        user_id = int(self.request.POST.get('user_id'))
+        url_from = self.request.POST.get("url_from")
+        
+        user_inst = User.objects.get(id=user_id)
+        blog_post_inst = ApiNews.objects.get(id=blog_post_id)
+        try:
+            blog_like_inst = Like.objects.get(post = blog_post_inst, user = user_inst)
+        except:
+            block_like = Like(post=blog_post_inst, \
+                                user=user_inst, \
+                                    like = True 
+            )
+            block_like.save()
+        return redirect(url_from)
+
+class RemoveLike(View):
+    def post(self, *args, **kwargs):
+        blog_post_id = int(self.request.POST.get('blog_post_id'))
+        url_from = self.request.POST.get('url_from')
+        blog_like = Like.objects.get(post_id = blog_post_id)
+        blog_like.delete()
+        return redirect(url_from)

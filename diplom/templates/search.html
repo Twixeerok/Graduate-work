@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% include 'bar/higth_bar.html' %}
+
+{% block context %}
+{% include 'bar/higth_bar.html' %}
+<div class="album py-1 bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+          <h1 style="color: Black;">Поиск</h1>
+      </div>
+    </div>
+  </div>
+<div class="da"></div>
+
+<div class="album py-1 bg-light">
+    <div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            {% if search %}
+            {% for i in search %}
+        <div class="card mb-2 box-shadow">
+            <div class="card card-pin">
+                <img class="card-img" src="{{i.image.url}} " alt="Card image" >
+                <div class="overlay">
+                    <h2 class="card-title title">{{i.title}}</h2>
+                    <div class="more">
+                        <a href="{% url 'category:news' i.id %}">
+                        <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> Подробности </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+            <a href="{% url 'category:news' i.id %} " style="color: Black;"><p class="card-text">{{i.title}}</p></a>
+            <p>{{i.description}}</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">{{i.time}}</small>
+            </div>
+            </div> 
+            
+        </div>
+        {% endfor %} 
+        {% else %}
+        <h1 style="text-align: center;">По вашему запросу ничего не найдено</h1>
+        {% endif %}
+<script src="{% static '/js/app.js' %}"></script>
+<script src="{% static '/js/theme.js' %}"></script>
+<script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="sidebars.js" crossorigin="anonymous"></script>
+
+   
+{% endblock %}

@@ -7,7 +7,7 @@ class CustomUserForm(RegistrationForm):
     class Meta(RegistrationForm.Meta):
         model = User
 
-class AccountForm(forms.ModelForm):
+class AccountForm(RegistrationForm, forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'last_name', 'patronymic', 'avatar', 'instagram', 'twitter', 'facebook', 'description']

@@ -9,8 +9,9 @@ from users.managers import UserManager
 
 class User(AbstractUser):
     username = models.CharField(_('username'), unique=True, max_length=255)
-    first_name = models.CharField(_('first name'), max_length=30, blank=True)
-    last_name = models.CharField(_('last name'), max_length=30, blank=True)
+    password = models.CharField(_('password'), max_length=128)
+    first_name = models.CharField(_('first name'), max_length=30, blank=False)
+    last_name = models.CharField(_('last name'), max_length=30, blank=False)
     patronymic = models.CharField(_('Отчество'), max_length=30, blank=True)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     is_active = models.BooleanField(_('active'), default=True)

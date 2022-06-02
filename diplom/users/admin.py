@@ -8,7 +8,7 @@ from .models import User
 
 @admin.register(User)
 class AdminUser(admin.ModelAdmin):
-    fields = ('username', 'email', 'first_name', 'last_name', 'patronymic', 'avatar', 'is_active', 'instagram', 'twitter', 'facebook', 'description',)
+    fields = ('username', 'email', 'first_name', 'last_name', 'patronymic', 'avatar', 'is_active', 'instagram', 'twitter', 'facebook', 'description')
 
     list_display = ('username', 'first_name', 'last_name', 'patronymic', 'email', 'is_active',)
 

@@ -18,7 +18,7 @@
 		<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-md-6">
-				{% for i in page %}
+				{% for i in page_obj %}
 			<div class="card mb-2 box-shadow">
 				<div class="card card-pin">
 					<img class="card-img" src="{{i.image.url}} " alt="Card image" >
@@ -40,8 +40,23 @@
 				
 			</div>
 			{% endfor %} 
-			</div>
-		
+			<div class="pagination">
+				<span class="step-links">
+					{% if page_obj.has_previous %}
+						<a href="?page=1">&laquo; первая</a>
+						<a href="?page={{ page_obj.previous_page_number }}">предыдущая</a>
+					{% endif %}
+			
+					<span class="current">
+						Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+					</span>
+			
+					{% if page_obj.has_next %}
+						<a href="?page={{ page_obj.next_page_number }}">следующая</a>
+						<a href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a>
+					{% endif %}
+				</span>
+			</div> <br> <br>
     <script src="{% static '/js/app.js' %}"></script>
     <script src="{% static '/js/theme.js' %}"></script>
 	<script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

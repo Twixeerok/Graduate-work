@@ -11,4 +11,9 @@ class AccountForm(RegistrationForm, forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'last_name', 'patronymic', 'avatar', 'instagram', 'twitter', 'facebook', 'description']
+
+class AccountForms(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'patronymic', 'avatar', 'instagram', 'twitter', 'facebook', 'description']
    

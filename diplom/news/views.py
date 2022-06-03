@@ -7,7 +7,8 @@ from django.shortcuts import HttpResponseRedirect
 from news.forms import NewsForm, CommentForm
 from apinews.models import ApiNews, Comment, Category, Like
 from users.models import User
-from users.forms import AccountForm
+from users.forms import AccountForm, AccountForms
+from django.core.paginator import Paginator
 
   
 class SearchMixin:
@@ -48,8 +49,11 @@ class MainPageView(SearchMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['new'] = Category.objects.get(slug=self.kwargs['slug'])
-        context['page'] = ApiNews.objects.all().filter(category=Category.objects.get(slug=self.kwargs['slug']))
+        context['page'] = ApiNews.objects.filter(category=Category.objects.get(slug=self.kwargs['slug']))
         return context
+
+    def get_queryset(self):
+        return ApiNews.objects.filter(category=Category.objects.get(slug=self.kwargs['slug']))
 
 class Profile(SearchMixin, LoginRequiredMixin, TemplateView):
     template_name = 'profile/profile.html'
@@ -64,7 +68,7 @@ class UserProfile(SearchMixin, LoginRequiredMixin, TemplateView):
 
 class ProfileEdit(SearchMixin, LoginRequiredMixin, UpdateView):
     template_name = 'profile/profile_edit.html'
-    form_class = AccountForm
+    form_class = AccountForms
     model = User
     success_url = reverse_lazy('category:profiledit')
 
@@ -74,8 +78,7 @@ class ProfileEdit(SearchMixin, LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         if self.request.recaptcha_is_valid:
             self.request.user.save()
-            return HttpResponseRedirect(self.get_success_url())
-        return HttpResponseRedirect(self.get_success_url())
+            return HttpResponseRedirect(self.get_success_url()) 
 
     def form_invalid(self, form):
         return HttpResponseRedirect(self.get_success_url())
@@ -84,7 +87,7 @@ class ProfileEdit(SearchMixin, LoginRequiredMixin, UpdateView):
 class PostNews(SearchMixin, LoginRequiredMixin, FormView):
     template_name = 'post.html'
     form_class = NewsForm
-    success_url = reverse_lazy('mainpage')
+    success_url = reverse_lazy('category:mainpage')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -95,10 +98,10 @@ class PostNews(SearchMixin, LoginRequiredMixin, FormView):
     def form_valid(self, form):
         if self.request.recaptcha_is_valid:
             form = form.save(commit=False)
-            form.user = self.request.user
+            form.users = self.request.user
             form.save()   
-            return HttpResponseRedirect('ok')
-        return redirect('category:add')
+            return HttpResponseRedirect(self.get_success_url())
+ 
 
 
 class News(SearchMixin, FormView):

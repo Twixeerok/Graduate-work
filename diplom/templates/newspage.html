@@ -17,12 +17,12 @@
 	<section class="bg-gray200 pt-5 pb-5">
 		<div class="container">
 			<div class="row justify-content-center">
-				<div class="col-md-7">
+				<div class="col-md-12">
 					<article class="card">
 					<img class="card-img-top mb-2" src="{{ new.image.url }}" alt="Card image">
 					<div class="card-body">
-						<h1 class="card-title display-4">
-						{{new.title}} </h1>
+						<h1 class="card-title display-5">
+						{{new.text}} </h1>
 						<form action="{% if is_liked_bool != true %}{% url 'category:adds' %}{% else %}{% url 'category:remove'%}{% endif %}" method="post" enctype="multipart/form-data">
 							{% csrf_token %}
 							<input type="hidden" name="blog_post_id" value="{{new.id}}">
